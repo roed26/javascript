@@ -188,7 +188,43 @@ var Calculadora = (function () {
     function validarDisplay() {
         var contenido = document.getElementById("display").innerText;
 
-        if (contenido == 0) {
+        if (contenido[1] == '.') {
+            return false;
+        } else if (contenido[0] == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    function validarCantidadSignoMenos() {
+        var contenido = document.getElementById("display").innerText;
+        var existeSigno = false;
+        var i;
+        for (i = 0; i < contenido.length; i++) {
+            if (contenido[i] == '-') {
+                existeSigno = true;
+            }
+        }
+        if (existeSigno) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    function validarCantidadSignoPunto() {
+        var contenido = document.getElementById("display").innerText;
+        var existeSigno = false;
+        var i;
+        for (i = 0; i < contenido.length; i++) {
+            if (contenido[i] == '.') {
+                existeSigno = true;
+            }
+        }
+        if (existeSigno) {
             return true;
         } else {
             return false;
@@ -204,6 +240,8 @@ var Calculadora = (function () {
         if (validarDisplay()) {
             document.getElementById("display").innerHTML = teclaPresionada;
             valorActual = document.getElementById("display").innerText;
+
+
         } else {
             if (operadorPresionado) {
                 if (parseInt(valorTemporal) == 0) {
@@ -218,9 +256,7 @@ var Calculadora = (function () {
                         valorFinal = nuevoValor;
                         document.getElementById("display").innerHTML = nuevoValor;
                     }
-
                 }
-
             } else {
                 if (document.getElementById("display").innerText.length < 8) {
                     valorActual = document.getElementById("display").innerText;
@@ -228,10 +264,10 @@ var Calculadora = (function () {
                     document.getElementById("display").innerHTML = nuevoValor;
                 }
             }
-
         }
-
     }
+
+
 
     function asignarSigno(signo) {
         operadorPresionado = true;
@@ -255,39 +291,75 @@ var Calculadora = (function () {
     });
 
     document.getElementById('igual').addEventListener('click', function (e) {
-        if (operadorPresionado == true) {
-            switch (operador) {
-                case '+':
-                    document.getElementById("display").innerHTML = parseFloat(primerValor) + parseFloat(valorFinal);
-                    operadorPresionado = false;
-                    teclaigualPresionada = true;
-                    break;
-                case '-':
-                    document.getElementById("display").innerHTML = parseFloat(primerValor) - parseFloat(valorFinal);
-                    operadorPresionado = false;
-                    teclaigualPresionada = true;
-                    break;
-                case 'x':
-                    document.getElementById("display").innerHTML = parseFloat(primerValor) * parseFloat(valorFinal);
-                    operadorPresionado = false;
-                    teclaigualPresionada = true;
-                    break;
-                case '/':
-                    document.getElementById("display").innerHTML = parseFloat(primerValor) / parseFloat(valorFinal);
-                    operadorPresionado = false;
-                    teclaigualPresionada = true;
-                    break;
-            }
-        } else {
-            switch (operador) {
-                case '+':
-                    valorActual = document.getElementById("display").innerText;
-                    document.getElementById("display").innerHTML = parseInt(valorActual) + parseFloat(valorFinal);
-                    teclaigualPresionada = true;
-                    break;
-            }
 
+        switch (operador) {
+            case '+':
+                var resultadoSuma = 0;
+                if (!teclaigualPresionada) {
+                    resultadoSuma = parseFloat(primerValor) + parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                } else {
+                    valorActual = document.getElementById("display").innerText;
+                    resultadoSuma = parseInt(valorActual) + parseFloat(valorFinal);
+                }
+
+                if (resultadoSuma.length < 8) {
+                    document.getElementById("display").innerHTML = resultadoSuma;
+                } else {
+                    document.getElementById("display").innerHTML = resultadoSuma.toString().substring(0, 8);
+                }
+                break;
+            case '-':
+                var resultadoResta = 0;
+                if (!teclaigualPresionada) {
+                    resultadoResta = parseFloat(primerValor) - parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                } else {
+                    valorActual = document.getElementById("display").innerText;
+                    resultadoResta = parseInt(valorActual) - parseFloat(valorFinal);
+                }
+                if (resultadoResta.length < 8) {
+                    document.getElementById("display").innerHTML = resultadoResta;
+                } else {
+                    document.getElementById("display").innerHTML = resultadoResta.toString().substring(0, 8);
+                }
+                break;
+            case 'x':
+                var resultadoMultiplicacion = 0;
+                if (!teclaigualPresionada) {
+                    resultadoMultiplicacion = parseFloat(primerValor) * parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                } else {
+                    valorActual = document.getElementById("display").innerText;
+                    resultadoMultiplicacion = parseInt(valorActual) * parseFloat(valorFinal);
+                }
+                if (resultadoMultiplicacion.length < 8) {
+                    document.getElementById("display").innerHTML = resultadoMultiplicacion;
+                } else {
+                    document.getElementById("display").innerHTML = resultadoMultiplicacion.toString().substring(0, 8);
+                }
+                break;
+            case '/':
+                var resultadoDivision = 0;
+                if (!teclaigualPresionada) {
+                    resultadoDivision = parseFloat(primerValor) / parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                } else {
+                    valorActual = document.getElementById("display").innerText;
+                    resultadoDivision = parseInt(valorActual) / parseFloat(valorFinal);
+                }
+                if (resultadoDivision.length < 8) {
+                    document.getElementById("display").innerHTML = resultadoDivision;
+                } else {
+                    document.getElementById("display").innerHTML = resultadoDivision.toString().substring(0, 8);
+                }
+                break;
         }
+
     });
 
     document.getElementById('on').addEventListener('click', function (e) {
@@ -295,40 +367,80 @@ var Calculadora = (function () {
         primerValor = 0;
         valorFinal = 0;
         teclaigualPresionada = false;
+        operadorPresionado = false;
 
     });
 
-    document.getElementById('1').addEventListener('click', function (e) {
+    tecla1.addEventListener('click', function (e) {
         actionkey("1");
     });
 
-    document.getElementById('2').addEventListener('click', function (e) {
+    tecla2.addEventListener('click', function (e) {
         actionkey("2");
     });
-    document.getElementById('3').addEventListener('click', function (e) {
+    tecla3.addEventListener('click', function (e) {
         actionkey("3");
     });
-    document.getElementById('4').addEventListener('click', function (e) {
+    tecla4.addEventListener('click', function (e) {
         actionkey("4");
     });
-    document.getElementById('5').addEventListener('click', function (e) {
+    tecla5.addEventListener('click', function (e) {
         actionkey("5");
     });
-    document.getElementById('6').addEventListener('click', function (e) {
+    tecla6.addEventListener('click', function (e) {
         actionkey("6");
     });
-    document.getElementById('7').addEventListener('click', function (e) {
+    tecla7.addEventListener('click', function (e) {
         actionkey("7");
     });
-    document.getElementById('8').addEventListener('click', function (e) {
+    tecla8.addEventListener('click', function (e) {
         actionkey("8");
     });
 
-    document.getElementById('9').addEventListener('click', function (e) {
+    tecla9.addEventListener('click', function (e) {
         actionkey("9");
     });
 
-    document.getElementById('0').addEventListener('click', function (e) {
+    tecla0.addEventListener('click', function (e) {
         actionkey("0");
+    });
+
+    teclaMasMenos.addEventListener('click', function (e) {
+        if (teclaigualPresionada == true) {
+            //operadorPresionado=false;
+            document.getElementById("display").innerHTML = "0";
+        }
+        if (!validarDisplay()) {
+            if (document.getElementById("display").innerText.length < 8 || document.getElementById("display").innerText.length == 8) {
+                if (!validarCantidadSignoMenos()) {
+                    valorActual = document.getElementById("display").innerText;
+                    var nuevoValor = '-'.concat(valorActual);
+                    document.getElementById("display").innerHTML = nuevoValor;
+                }
+
+            }
+        }
+    });
+    teclaPunto.addEventListener('click', function (e) {
+        if (teclaigualPresionada == true) {
+            //operadorPresionado=false;
+            document.getElementById("display").innerHTML = "0";
+        }
+        if (!validarDisplay()) {
+            if (document.getElementById("display").innerText.length < 8 || document.getElementById("display").innerText.length == 8) {
+                if (!validarCantidadSignoPunto()) {
+                    valorActual = document.getElementById("display").innerText;
+                    var nuevoValor = valorActual.concat('.');
+                    document.getElementById("display").innerHTML = nuevoValor;
+                }
+
+            }
+        } else {
+            if (!validarCantidadSignoPunto()) {
+                valorActual = document.getElementById("display").innerText;
+                var nuevoValor = valorActual.concat('.');
+                document.getElementById("display").innerHTML = nuevoValor;
+            }
+        }
     });
 })();
