@@ -1,10 +1,13 @@
-var Calculadora=(function () {
+var Calculadora = (function () {
     //variables
     var valorActual = 0;
     var nuevoValor = 0;
     var operadorPresionado = false;
+    var teclaigualPresionada = false;
     var operador = "";
     var primerValor = 0;
+    var valorFinal = 0;
+    var valorTemporal = 0;
     var tecla1 = document.getElementById('1');
     var tecla2 = document.getElementById('2');
     var tecla3 = document.getElementById('3');
@@ -25,7 +28,7 @@ var Calculadora=(function () {
     var teclaRaiz = document.getElementById('raiz');
     var teclaDividir = document.getElementById('dividido');
 
-    
+
     tecla1.addEventListener("mousedown", function () {
         reducirTamanoBotonAccion(tecla1);
     });
@@ -170,7 +173,7 @@ var Calculadora=(function () {
         tecla.style.width = "22%";
         tecla.style.height = "62.91px";
     }
-    
+
 
     function reducirTamanoBotonAccionMas() {
         teclaMas.style.width = "89%";
@@ -193,84 +196,139 @@ var Calculadora=(function () {
 
     }
 
-    document.getElementById('mas').addEventListener('click', function (e) {
-        operadorPresionado = true;
-        operador = "+";
-        primerValor = valorActual;
+    function actionkey(teclaPresionada) {
+        if (teclaigualPresionada == true) {
+            //operadorPresionado=false;
+            document.getElementById("display").innerHTML = "0";
+        }
+        if (validarDisplay()) {
+            document.getElementById("display").innerHTML = teclaPresionada;
+            valorActual = document.getElementById("display").innerText;
+        } else {
+            if (operadorPresionado) {
+                if (parseInt(valorTemporal) == 0) {
+                    document.getElementById("display").innerHTML = teclaPresionada;
+                    valorActual = document.getElementById("display").innerText;
+                    valorFinal = valorActual;
+                    valorTemporal = 1;
+                } else {
+                    if (document.getElementById("display").innerText.length < 8) {
+                        valorActual = document.getElementById("display").innerText;
+                        var nuevoValor = valorActual.concat(teclaPresionada);
+                        valorFinal = nuevoValor;
+                        document.getElementById("display").innerHTML = nuevoValor;
+                    }
 
+                }
+
+            } else {
+                if (document.getElementById("display").innerText.length < 8) {
+                    valorActual = document.getElementById("display").innerText;
+                    var nuevoValor = valorActual.concat(teclaPresionada);
+                    document.getElementById("display").innerHTML = nuevoValor;
+                }
+            }
+
+        }
+
+    }
+
+    function asignarSigno(signo) {
+        operadorPresionado = true;
+        operador = signo;
+        primerValor = document.getElementById("display").innerText;
+        valorTemporal = 0;
+    }
+
+    document.getElementById('mas').addEventListener('click', function (e) {
+        asignarSigno("+");
+    });
+
+    document.getElementById('menos').addEventListener('click', function (e) {
+        asignarSigno("-");
+    });
+    document.getElementById('por').addEventListener('click', function (e) {
+        asignarSigno("x");
+    });
+    document.getElementById('dividido').addEventListener('click', function (e) {
+        asignarSigno("/");
     });
 
     document.getElementById('igual').addEventListener('click', function (e) {
         if (operadorPresionado == true) {
-
             switch (operador) {
                 case '+':
-
-                    document.getElementById("display").innerHTML = primerValor + 10;
+                    document.getElementById("display").innerHTML = parseFloat(primerValor) + parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                    break;
+                case '-':
+                    document.getElementById("display").innerHTML = parseFloat(primerValor) - parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                    break;
+                case 'x':
+                    document.getElementById("display").innerHTML = parseFloat(primerValor) * parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
+                    break;
+                case '/':
+                    document.getElementById("display").innerHTML = parseFloat(primerValor) / parseFloat(valorFinal);
+                    operadorPresionado = false;
+                    teclaigualPresionada = true;
                     break;
             }
+        } else {
+            switch (operador) {
+                case '+':
+                    valorActual = document.getElementById("display").innerText;
+                    document.getElementById("display").innerHTML = parseInt(valorActual) + parseFloat(valorFinal);
+                    teclaigualPresionada = true;
+                    break;
+            }
+
         }
     });
 
     document.getElementById('on').addEventListener('click', function (e) {
         document.getElementById("display").innerHTML = "0";
+        primerValor = 0;
+        valorFinal = 0;
+        teclaigualPresionada = false;
+
     });
 
     document.getElementById('1').addEventListener('click', function (e) {
-
-        if (validarDisplay()) {
-            document.getElementById("display").innerHTML = "1";
-        } else {
-
-            if (operadorPresionado) {
-                document.getElementById("display").innerHTML = "1";
-            } else {
-                valorActual = document.getElementById("display").innerText;
-                var nuevoValor = valorActual.concat('1');
-                document.getElementById("display").innerHTML = nuevoValor;
-            }
-
-
-        }
-
+        actionkey("1");
     });
 
     document.getElementById('2').addEventListener('click', function (e) {
-        if (validarDisplay()) {
-            document.getElementById("display").innerHTML = "2";
-        } else {
-            valorActual = document.getElementById("display").innerText;
-            if (valorActual.length < 8) {
-                var nuevoValor = valorActual.concat('2');
-                document.getElementById("display").innerHTML = nuevoValor;
-            }
-
-        }
+        actionkey("2");
     });
     document.getElementById('3').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "3";
+        actionkey("3");
     });
     document.getElementById('4').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "4";
+        actionkey("4");
     });
     document.getElementById('5').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "5";
+        actionkey("5");
     });
     document.getElementById('6').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "6";
+        actionkey("6");
     });
     document.getElementById('7').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "7";
+        actionkey("7");
     });
     document.getElementById('8').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "8";
+        actionkey("8");
     });
 
     document.getElementById('9').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "9";
+        actionkey("9");
     });
 
     document.getElementById('0').addEventListener('click', function (e) {
-        document.getElementById("display").innerHTML = "0";
+        actionkey("0");
     });
 })();
